@@ -2,6 +2,7 @@ package com.example.pri17.refreshpract;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
+import android.text.method.PasswordTransformationMethod;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,8 @@ public class refreshHeader extends FrameLayout implements PtrUIHandler {
     public static final int STATE_PREPARE = 0;
     public static final int STATE_BEGIN = 1;
     public static final int STATE_INISH = 2;
+
+    public static final int MARGIN_RIGHT = 100;
 
 //动画
     private AnimationDrawable mAnimation;
@@ -88,6 +91,29 @@ public class refreshHeader extends FrameLayout implements PtrUIHandler {
         //处理提醒字体
         switch (state) {
             case STATE_PREPARE:
+                expressMan.setAlpha(ptrIndicator.getCurrentPercent());//设置透明度
+                packImage.setAlpha(ptrIndicator.getCurrentPercent());
+                FrameLayout.LayoutParams expressmanLayoutParams = (LayoutParams) expressMan.getLayoutParams();//获取子视图
+                if (ptrIndicator.getCurrentPercent() <=1){
+                    expressMan.setScaleX(ptrIndicator.getCurrentPercent());
+                    expressMan.setScaleY(ptrIndicator.getCurrentPercent());
+                    packImage.setScaleY(ptrIndicator.getCurrentPercent());
+                    packImage.setScaleX(ptrIndicator.getCurrentPercent());
+                    int maginRight = (int) (MARGIN_RIGHT*(1- ptrIndicator.getCurrentPercent()));
+                    expressmanLayoutParams.setMargins(0,0,MARGIN_RIGHT,0);
+                    expressMan.setLayoutParams(expressmanLayoutParams);
+                }
+                if (ptrIndicator.getCurrentPercent()<1.2){
+                    mRemainder.setText("下拉刷新");
+                }else{
+                    mRemainder.setText("松开刷新");
+                }
+                break;
+            case STATE_INISH:
+                mRemainder.setText("加载完成！");
+                break;
+            case STATE_BEGIN:
+                mRemainder.setText("加载中...");
         }
     }
 
